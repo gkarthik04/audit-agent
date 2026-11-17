@@ -69,6 +69,8 @@ The gap between 100% and 70% is the real limit of keyword rules. A ticket like "
 
 **Limits.** Keyword rules can't understand context, so sarcasm or "this is *not* a billing question" will fool them. The rate limiter runs in memory per process (use a shared store when you run several replicas). There is no authentication, so put it behind a gateway if it's exposed publicly.
 
+`requirements.txt` pins every package (pytest and its full dependency tree) to an exact version for reproducible installs. The API itself needs only the standard library. A root `conftest.py` also prints the standard unittest summary (`Ran N tests … OK`) after pytest's own, for CI tools that parse that format.
+
 `arena.json` tells the grader how to install, test and start the API: `pip install -r requirements.txt`, `python -m pytest -q`, `python app.py` on port 8000.
 
 ## Code-audit agent
@@ -127,7 +129,7 @@ The default model is `claude-opus-5-5`; override it with `--model` or `AUDIT_AGE
 
 ## Sample report
 
-[`tests/fixtures/messy_repo`](tests/fixtures/messy_repo) is an intentionally terrible little Python + JavaScript + Go project. Scanning it produces **58 findings (1 critical, 17 high, 18 medium, 22 low)** and covers every rule id:
+[`tests/fixtures/messy_repo`](tests/fixtures/messy_repo) is an intentionally terrible little Python + JavaScript + Go project. Scanning it produces **57 findings (1 critical, 17 high, 18 medium, 21 low)** and covers every rule id:
 
 - [`examples/sample-report.md`](examples/sample-report.md): Markdown
 - [`examples/sample-report.txt`](examples/sample-report.txt): terminal output

@@ -10,11 +10,11 @@
     "critical": 1,
     "high": 17,
     "medium": 18,
-    "low": 22,
+    "low": 21,
     "info": 0
   },
   "by_category": {
-    "security": 21,
+    "security": 20,
     "slop": 20,
     "gap": 17
   },
@@ -503,17 +503,6 @@
       "path": "web/server.js",
       "line": 26,
       "snippet": "function validateInput(input) {}",
-      "note": ""
-    },
-    {
-      "rule_id": "SEC010",
-      "title": "Vulnerable or unpinned dependency",
-      "severity": "low",
-      "category": "security",
-      "message": "'pyyaml' is unpinned; builds are not reproducible and may pull a vulnerable release.",
-      "path": "requirements.txt",
-      "line": 2,
-      "snippet": "pyyaml",
       "note": ""
     },
     {

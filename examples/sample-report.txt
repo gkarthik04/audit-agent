@@ -1,7 +1,7 @@
 audit-agent 0.1.0 - tests/fixtures/messy_repo
-58 findings in 9 files (1 critical, 17 high, 18 medium, 22 low)
+57 findings in 9 files (1 critical, 17 high, 18 medium, 21 low)
 
-== Security issues (21) ==
+== Security issues (20) ==
   [CRITICAL] SEC001 app/db.py:10
              AWS access key committed to source. Rotate it and load from a secret store.
   [HIGH    ] SEC009 .env
@@ -40,8 +40,6 @@ audit-agent 0.1.0 - tests/fixtures/messy_repo
              SQL assembled from strings is injectable. Use parameterised queries.
   [MEDIUM  ] SEC006 app/db.py:24
              MD5/SHA-1/DES/RC4/ECB are broken for security purposes. Use SHA-256+, AES-GCM, bcrypt/argon2.
-  [LOW     ] SEC010 requirements.txt:2
-             'pyyaml' is unpinned; builds are not reproducible and may pull a vulnerable release.
   [LOW     ] SEC010 web/package.json:5
              'express' is unpinned; builds are not reproducible and may pull a vulnerable release.
 

@@ -1,22 +1,22 @@
 # Code audit report
 
-**58 findings in 9 files (1 critical, 17 high, 18 medium, 22 low)**
+**57 findings in 9 files (1 critical, 17 high, 18 medium, 21 low)**
 
 | Severity | Count |
 |---|---|
 | 🟥 critical | 1 |
 | 🟧 high | 17 |
 | 🟨 medium | 18 |
-| 🟦 low | 22 |
+| 🟦 low | 21 |
 | ⬜ info | 0 |
 
 | Category | Count |
 |---|---|
-| Security issues | 21 |
+| Security issues | 20 |
 | Slop (AI-style junk & dead code) | 20 |
 | Coding gaps & loose ends | 17 |
 
-## Security issues (21)
+## Security issues (20)
 
 | Sev | Rule | Location | Message |
 |---|---|---|---|
@@ -39,7 +39,6 @@
 | 🟧 high | `SEC003` | `web/server.js:16` | eval on dynamic input allows arbitrary code execution. |
 | 🟧 high | `SEC005` | `web/server.js:20` | SQL assembled from strings is injectable. Use parameterised queries. |
 | 🟨 medium | `SEC006` | `app/db.py:24` | MD5/SHA-1/DES/RC4/ECB are broken for security purposes. Use SHA-256+, AES-GCM, bcrypt/argon2. |
-| 🟦 low | `SEC010` | `requirements.txt:2` | 'pyyaml' is unpinned; builds are not reproducible and may pull a vulnerable release. |
 | 🟦 low | `SEC010` | `web/package.json:5` | 'express' is unpinned; builds are not reproducible and may pull a vulnerable release. |
 
 ## Slop (AI-style junk & dead code) (20)
