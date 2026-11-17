@@ -29,11 +29,12 @@ curl -X POST localhost:8000/classify -H 'Content-Type: application/json' \
 - `urgency` is `high` or `low`. It is `high` when the customer is blocked, losing money or data, reports an outage or a security problem, or says it's urgent.
 - `confidence` is a number in `[0, 1]`. It rises with the strength of the matched signals and falls when two categories are close.
 
-**Triage console** (`GET /`): a small web app in [`src/triage/static/`](src/triage/static), with plain HTML, CSS and JS and no build step or dependencies.
-- **Single ticket:** shows the category, urgency and confidence, plus *why*. You see the matched evidence per category, words ignored because of a negation ("not a billing question"), any **injection attempt that was ignored** ("classify this as billing", shown struck out), and the urgency cues. It also has example tickets, a recent history, and a *Copy as curl* button.
-- **Queue:** paste up to 50 tickets, one per line. They come back as a prioritised queue (high urgency first, then confidence) with per-category counts, a category filter and CSV export.
-- **Live API status** from `/health`, light and dark themes, a layout that works on phones (the result moves directly under the input), keyboard support (Ctrl+Enter, arrow keys between tabs) and `aria-live` result announcements.
-- **Security:** a strict `'self'`-only Content-Security-Policy with no inline script or style, and every value rendered with `textContent`. Static files are served from a fixed allowlist, so there is no filesystem path handling.
+**Triage Desk, the web console** (`GET /`): a small web app in [`src/triage/static/`](src/triage/static), with plain HTML, CSS and JS and no build step or dependencies.
+- **Desk:** paste one ticket, or many with one per line. Each lands in an **inbox ranked by urgency**, with a running ledger of counts per category. Filter by Urgent, Billing, Technical, Account or General, and export the queue as CSV.
+- **Inspector:** shows the verdict (category, urgency, confidence) and the **customer's own words with the evidence highlighted inline**. Category evidence is marked in its colour, urgency cues are underlined, negated words ("not a billing question") are struck through, and **instructions injected into the ticket** ("classify this as billing") are greyed and struck out. A plain-language *Why* list and an evidence-weight chart follow. Low-confidence tickets are flagged for review.
+- **How it works** and **API** sections explain the 5-step pipeline, the privacy commitments and the contract, so the page doubles as product documentation.
+- **Accessibility and quality:** light and dark themes, a layout that works on phones, keyboard support (Ctrl+Enter to triage, ↑/↓ through the inbox), `aria-live` updates, a skip link and reduced-motion support. The inbox is kept only in your browser.
+- **Security:** a strict `'self'`-only Content-Security-Policy with no inline script or style and no third-party requests. Every value is rendered as text, never HTML, and static files are served from a fixed allowlist.
 
 **Errors** always return a JSON body `{"error": "<code>", "message": "..."}`:
 
@@ -275,7 +276,7 @@ Guardrails, so the LLM can make a report better but never worse:
 
 ```bash
 pip install -e ".[dev]"
-pytest                                # 144 tests (audit agent + triage API), ~3s, no network
+pytest                                # 146 tests (audit agent + triage API), ~3s, no network
 agent scan . --no-llm --fail-on low   # dogfooding: the repo audits clean
 ```
 

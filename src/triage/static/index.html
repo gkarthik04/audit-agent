@@ -3,120 +3,178 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Classify support tickets by category and urgency, with an explanation for every decision.">
-  <title>Ticket Triage</title>
+  <meta name="description" content="Triage Desk sorts support tickets by category and urgency and shows the evidence behind every decision.">
+  <meta name="color-scheme" content="light dark">
+  <title>Triage Desk</title>
+  <link rel="icon" href="/static/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="/static/app.css">
   <script src="/static/app.js" defer></script>
 </head>
 <body>
-  <header class="topbar">
-    <div class="brand">
-      <span class="logo" aria-hidden="true"></span>
-      <div>
-        <h1>Ticket Triage</h1>
-        <p class="tagline">Category, urgency and the reason why, for every support ticket.</p>
+  <a class="skip" href="#composer-text">Skip to the ticket box</a>
+
+  <header class="masthead">
+    <div class="wrap masthead-row">
+      <a class="wordmark" href="#desk" aria-label="Triage Desk, home">
+        <span class="mark" aria-hidden="true"><i></i><i></i><i></i></span>
+        <span>Triage&nbsp;Desk</span>
+      </a>
+      <nav class="nav" aria-label="Sections">
+        <a href="#desk">Desk</a>
+        <a href="#how">How it works</a>
+        <a href="#api">API</a>
+      </nav>
+      <div id="status" class="status" role="status" aria-live="polite">
+        <span class="pulse" aria-hidden="true"></span><span id="status-text">Connecting…</span>
       </div>
-    </div>
-    <div id="status" class="status" role="status" aria-live="polite">
-      <span class="dot"></span><span id="status-text">Checking API…</span>
     </div>
   </header>
 
-  <nav class="tabs" role="tablist" aria-label="Mode">
-    <button role="tab" id="tab-single" aria-controls="view-single" aria-selected="true">Single ticket</button>
-    <button role="tab" id="tab-queue" aria-controls="view-queue" aria-selected="false" tabindex="-1">Queue</button>
-  </nav>
-
   <main>
-    <!-- Single ticket -->
-    <section id="view-single" role="tabpanel" aria-labelledby="tab-single" class="grid">
-      <div class="area-input">
-        <div class="card">
-          <label for="ticket" class="label">Ticket text</label>
-          <textarea id="ticket" rows="7" maxlength="16000"
-                    placeholder="Paste a customer message, e.g. &quot;I was charged twice for my subscription, please refund ASAP&quot;"></textarea>
-          <div class="row between">
-            <div class="row">
-              <button id="classify" class="btn primary" type="button">Classify</button>
-              <button id="clear" class="btn ghost" type="button">Clear</button>
+    <!-- ============================================================ desk -->
+    <section id="desk" class="wrap desk" aria-labelledby="desk-title">
+      <div class="desk-intro">
+        <p class="eyebrow">Support triage</p>
+        <h1 id="desk-title">Every ticket sorted, ranked and explained.</h1>
+        <p class="lede">Paste one ticket or a whole morning's worth. Triage Desk labels each one billing, technical, account or general, flags what's urgent, and shows you exactly which words made the call.</p>
+      </div>
+
+      <dl class="ledger" id="ledger" aria-label="Desk summary">
+        <div><dt>On the desk</dt><dd id="stat-total">0</dd></div>
+        <div class="urgent"><dt>Urgent</dt><dd id="stat-high">0</dd></div>
+        <div><dt>Billing</dt><dd id="stat-billing">0</dd></div>
+        <div><dt>Technical</dt><dd id="stat-technical">0</dd></div>
+        <div><dt>Account</dt><dd id="stat-account">0</dd></div>
+        <div><dt>General</dt><dd id="stat-general">0</dd></div>
+      </dl>
+
+      <div class="desk-grid">
+        <!-- left: composer + inbox -->
+        <div class="rail">
+          <form id="composer" class="panel composer" novalidate>
+            <label for="composer-text" class="panel-title">New tickets</label>
+            <textarea id="composer-text" rows="5" spellcheck="true"
+              placeholder="Paste a customer message. For several tickets at once, put one per line."></textarea>
+            <div class="composer-foot">
+              <span id="composer-hint" class="hint">Ctrl + Enter to triage</span>
+              <button id="triage" class="btn btn-ink" type="submit">Triage</button>
             </div>
-            <span id="counter" class="muted small">0 / 16,384 bytes</span>
-          </div>
-          <p class="muted small hint">Press <kbd>Ctrl</kbd> + <kbd>Enter</kbd> to classify.</p>
-        </div>
-      </div>
+            <div class="samples">
+              <span class="hint">Try:</span>
+              <button type="button" class="link" data-sample="inbox">a sample morning inbox</button>
+              <span class="hint">or</span>
+              <button type="button" class="link" data-sample="tricky">tricky tickets</button>
+            </div>
+          </form>
 
-      <div class="area-result">
-        <div id="result" class="card result" aria-live="polite">
-          <div class="empty-state">
-            <span class="big-dot" aria-hidden="true"></span>
-            <p><strong>No ticket classified yet.</strong></p>
-            <p class="muted">The result shows the category, urgency, confidence, and the evidence behind them.</p>
+          <div class="panel inbox-panel">
+            <div class="inbox-head">
+              <h2 class="panel-title">Inbox</h2>
+              <div class="inbox-tools">
+                <button id="export" class="btn btn-quiet" type="button" disabled>Export CSV</button>
+                <button id="clear" class="btn btn-quiet" type="button" disabled>Clear</button>
+              </div>
+            </div>
+            <div class="filters" role="group" aria-label="Filter inbox">
+              <button type="button" class="filter" data-filter="all" aria-pressed="true">All</button>
+              <button type="button" class="filter" data-filter="urgent" aria-pressed="false">Urgent</button>
+              <button type="button" class="filter" data-filter="billing" aria-pressed="false">Billing</button>
+              <button type="button" class="filter" data-filter="technical" aria-pressed="false">Technical</button>
+              <button type="button" class="filter" data-filter="account" aria-pressed="false">Account</button>
+              <button type="button" class="filter" data-filter="general" aria-pressed="false">General</button>
+            </div>
+            <ol id="inbox" class="inbox" aria-label="Triaged tickets, most urgent first"></ol>
+            <p id="inbox-empty" class="inbox-empty">Your inbox is empty. Triaged tickets appear here, most urgent first.</p>
           </div>
         </div>
-      </div>
 
-      <div class="area-extras col">
-        <div class="card">
-          <h2 class="h2">Try an example</h2>
-          <div id="examples" class="chips"></div>
-        </div>
-
-        <div class="card">
-          <div class="row between">
-            <h2 class="h2">Recent</h2>
-            <span class="muted small">kept in this tab only</span>
+        <!-- right: inspector -->
+        <article id="inspector" class="panel inspector" aria-live="polite" aria-label="Ticket details">
+          <div class="inspector-empty">
+            <div class="stack" aria-hidden="true"><i></i><i></i><i></i></div>
+            <h2>Nothing selected</h2>
+            <p>Triage a ticket to see its category and urgency, with the evidence highlighted in the customer's own words.</p>
           </div>
-          <ol id="recent" class="recent"><li class="muted small empty">Nothing yet.</li></ol>
-        </div>
+        </article>
       </div>
     </section>
 
-    <!-- Queue -->
-    <section id="view-queue" role="tabpanel" aria-labelledby="tab-queue" hidden>
-      <div class="card">
-        <label for="queue-input" class="label">Tickets, one per line (up to 50)</label>
-        <textarea id="queue-input" rows="8" placeholder="Paste a batch of tickets, one per line"></textarea>
-        <div class="row between">
-          <div class="row">
-            <button id="queue-run" class="btn primary" type="button">Triage queue</button>
-            <button id="queue-sample" class="btn ghost" type="button">Load sample queue</button>
-          </div>
-          <span id="queue-progress" class="muted small" aria-live="polite"></span>
+    <!-- ============================================================ how -->
+    <section id="how" class="wrap section" aria-labelledby="how-title">
+      <p class="eyebrow">How it works</p>
+      <h2 id="how-title" class="section-title">How a decision is made</h2>
+      <p class="section-lede">Every result is produced by the same transparent rules, so you can always trace a label back to the words that caused it. Same ticket in, same answer out.</p>
+      <ol class="steps">
+        <li><span class="step-no">01</span><h3>Normalise</h3><p>Unicode, case, apostrophes and spacing are made consistent, so "Refund", "REFUND" and "refund" read the same.</p></li>
+        <li><span class="step-no">02</span><h3>Defang</h3><p>Text that tries to steer the result, like "ignore previous instructions" or "classify this as billing", is set aside. Tickets can't choose their own label.</p></li>
+        <li><span class="step-no">03</span><h3>Gather evidence</h3><p>Weighted signals for each category, in English, Hinglish and Hindi. Negated mentions ("not a billing issue") don't count, and common typos still do.</p></li>
+        <li><span class="step-no">04</span><h3>Decide</h3><p>The strongest category wins, and confidence reflects how clear the margin was. A ticket that only describes something broken is treated as technical.</p></li>
+        <li><span class="step-no">05</span><h3>Rate urgency</h3><p>Outages, security problems, lost money or data, lockouts and explicit deadlines raise urgency. "No rush" from the customer lowers it.</p></li>
+      </ol>
+      <ul class="promises">
+        <li><strong>Nothing is stored.</strong> Tickets are classified in memory, and the inbox lives only in your browser.</li>
+        <li><strong>Ticket text is never logged.</strong> Server logs record timings and status codes, not content or client addresses.</li>
+        <li><strong>Works offline from AI providers.</strong> The rules need no external service. An optional Claude mode can be switched on and falls back to the rules if it fails.</li>
+      </ul>
+    </section>
+
+    <!-- ============================================================ api -->
+    <section id="api" class="wrap section" aria-labelledby="api-title">
+      <p class="eyebrow">Developers</p>
+      <h2 id="api-title" class="section-title">Use it from your helpdesk</h2>
+      <p class="section-lede">One endpoint, one JSON object in, one out. Wire it into a webhook, a queue worker or a ticketing rule.</p>
+      <div class="api-grid">
+        <div class="code-card">
+          <div class="code-head"><span>Request</span><button type="button" class="btn btn-quiet btn-sm" id="copy-request">Copy</button></div>
+          <pre id="api-request">curl -X POST https://your-host/classify \
+  -H 'Content-Type: application/json' \
+  -d '{"text": "I was charged twice, please refund ASAP"}'</pre>
+        </div>
+        <div class="code-card">
+          <div class="code-head"><span>Response · 200</span></div>
+          <pre>{
+  "category": "billing",
+  "urgency": "high",
+  "confidence": 0.95
+}</pre>
         </div>
       </div>
-
-      <div id="queue-summary" class="stats" hidden></div>
-
-      <div id="queue-table-card" class="card" hidden>
-        <div class="row between">
-          <h2 class="h2">Prioritised queue</h2>
-          <div class="row">
-            <label for="queue-filter" class="muted small">Show</label>
-            <select id="queue-filter">
-              <option value="all">All categories</option>
-              <option value="billing">Billing</option>
-              <option value="technical">Technical</option>
-              <option value="account">Account</option>
-              <option value="general">General</option>
-            </select>
-            <button id="queue-export" class="btn ghost" type="button">Export CSV</button>
-          </div>
+      <div class="contract">
+        <div class="table-card">
+        <h3 class="table-title">Response fields</h3>
+        <table>
+          <thead><tr><th scope="col">Field</th><th scope="col">Values</th></tr></thead>
+          <tbody>
+            <tr><td><code>category</code></td><td><code>billing</code>, <code>technical</code>, <code>account</code> or <code>general</code></td></tr>
+            <tr><td><code>urgency</code></td><td><code>high</code> or <code>low</code></td></tr>
+            <tr><td><code>confidence</code></td><td>A number from 0 to 1</td></tr>
+          </tbody>
+        </table>
         </div>
-        <div class="table-wrap">
-          <table>
-            <thead><tr><th>#</th><th>Ticket</th><th>Category</th><th>Urgency</th><th class="num">Confidence</th></tr></thead>
-            <tbody id="queue-rows"></tbody>
-          </table>
+        <div class="table-card">
+        <h3 class="table-title">Errors · always JSON <code>{"error", "message"}</code></h3>
+        <table>
+          <thead><tr><th scope="col">Status</th><th scope="col">When</th></tr></thead>
+          <tbody>
+            <tr><td><code>400</code></td><td>Body isn't valid JSON, or <code>text</code> is missing or empty</td></tr>
+            <tr><td><code>413</code></td><td>Body is larger than 16 KB</td></tr>
+            <tr><td><code>429</code></td><td>Too many requests; retry after the <code>Retry-After</code> header</td></tr>
+          </tbody>
+        </table>
         </div>
-        <p class="muted small">Sorted by urgency, then confidence. High-urgency tickets come first.</p>
       </div>
+      <p class="fineprint">Add <code>?explain=1</code> to also receive the evidence shown on the desk. <code>GET /health</code> returns <code>{"ok": true}</code> for uptime checks.</p>
     </section>
   </main>
 
-  <footer class="footer muted small">
-    <span>API:</span> <code>POST /classify {"text": "…"}</code> · <code>GET /health</code> ·
-    deterministic rules, no data stored, ticket text never logged.
+  <footer class="site-footer">
+    <div class="wrap footer-row">
+      <span class="wordmark small"><span class="mark" aria-hidden="true"><i></i><i></i><i></i></span><span>Triage&nbsp;Desk</span></span>
+      <span class="footer-note">Open source under the MIT licence.</span>
+      <a href="https://github.com/gkarthik04/audit-agent" rel="noopener">Source on GitHub</a>
+    </div>
   </footer>
+
+  <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
 </body>
 </html>

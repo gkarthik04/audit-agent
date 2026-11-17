@@ -106,6 +106,7 @@ def test_rate_limiter_refills():
 
 @pytest.mark.parametrize("path,ctype", [
     ("/", "text/html"), ("/static/app.css", "text/css"), ("/static/app.js", "text/javascript"),
+    ("/static/favicon.svg", "image/svg+xml"), ("/favicon.ico", "image/svg+xml"),
 ])
 def test_console_files_are_served_with_strict_csp(port, path, ctype):
     status, headers, _ = call_raw(port, "GET", path)

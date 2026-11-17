@@ -43,8 +43,10 @@ STATIC_FILES = {
     "/": ("index.html", "text/html; charset=utf-8"),
     "/static/app.css": ("app.css", "text/css; charset=utf-8"),
     "/static/app.js": ("app.js", "text/javascript; charset=utf-8"),
+    "/static/favicon.svg": ("favicon.svg", "image/svg+xml"),
+    "/favicon.ico": ("favicon.svg", "image/svg+xml"),  # browsers request this path by default
 }
-PAGE_CSP = ("default-src 'none'; script-src 'self'; style-src 'self'; connect-src 'self'; "
+PAGE_CSP = ("default-src 'none'; script-src 'self'; style-src 'self'; connect-src 'self'; img-src 'self'; "
             "base-uri 'none'; form-action 'none'; frame-ancestors 'none'")
 _static_cache: dict[str, bytes] = {}
 
