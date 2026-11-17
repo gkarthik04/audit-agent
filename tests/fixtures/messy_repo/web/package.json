@@ -1,0 +1,9 @@
+{
+  "name": "messy-web",
+  "version": "1.0.0",
+  "dependencies": {
+    "express": "*",
+    "lodash": "4.17.15",
+    "axios": "^0.21.1"
+  }
+}

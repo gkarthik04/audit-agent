@@ -1,0 +1,40 @@
+{"text": "Why was I charged in USD instead of INR?", "category": "billing", "urgency": "low"}
+{"text": "Can you split my payment into installments?", "category": "billing", "urgency": "low"}
+{"text": "Our purchase order number is missing from the invoice", "category": "billing", "urgency": "low"}
+{"text": "Got a refund confirmation email but the amount never reached my account", "category": "billing", "urgency": "low"}
+{"text": "Stop auto-renewal on my subscription please", "category": "billing", "urgency": "low"}
+{"text": "Someone used my card to buy 5 licenses, I didn't authorize this", "category": "billing", "urgency": "high"}
+{"text": "Which payment methods do you accept?", "category": "billing", "urgency": "low"}
+{"text": "I downgraded but still paying for the pro tier", "category": "billing", "urgency": "low"}
+{"text": "Mujhe apna paisa wapas chahiye", "category": "billing", "urgency": "low"}
+{"text": "The total at checkout is different from the price on the pricing page", "category": "billing", "urgency": "low"}
+{"text": "Notifications arrive hours late", "category": "technical", "urgency": "low"}
+{"text": "Uploading a CSV gives 'unexpected token' and nothing imports", "category": "technical", "urgency": "low"}
+{"text": "The site is completely unreachable from India", "category": "technical", "urgency": "high"}
+{"text": "The tablet layout overlaps the menu with the content", "category": "technical", "urgency": "low"}
+{"text": "Search results are in random order", "category": "technical", "urgency": "low"}
+{"text": "Our integration started returning 401 after your API change", "category": "technical", "urgency": "low"}
+{"text": "Every few minutes the connection drops and I lose unsaved work", "category": "technical", "urgency": "high"}
+{"text": "Audio is out of sync in recorded meetings", "category": "technical", "urgency": "low"}
+{"text": "The app drains my battery even when closed", "category": "technical", "urgency": "low"}
+{"text": "Reports page keeps showing an old cached version", "category": "technical", "urgency": "low"}
+{"text": "I need to change the name on my account", "category": "account", "urgency": "low"}
+{"text": "My OTP says invalid every time", "category": "account", "urgency": "low"}
+{"text": "How do I remove a former employee's access?", "category": "account", "urgency": "low"}
+{"text": "Can't log in, it says too many attempts", "category": "account", "urgency": "low"}
+{"text": "I want to switch my login from email to Google SSO", "category": "account", "urgency": "low"}
+{"text": "Got an alert that my password was changed and it wasn't me", "category": "account", "urgency": "high"}
+{"text": "Mera password reset nahi ho raha", "category": "account", "urgency": "low"}
+{"text": "Please reactivate my deactivated account", "category": "account", "urgency": "low"}
+{"text": "Where do I update my notification email?", "category": "account", "urgency": "low"}
+{"text": "Can I recover a deleted account?", "category": "account", "urgency": "low"}
+{"text": "Do you have a mobile app for Windows?", "category": "general", "urgency": "low"}
+{"text": "Love what you're building, keep it up", "category": "general", "urgency": "low"}
+{"text": "Can we schedule a demo for my team?", "category": "general", "urgency": "low"}
+{"text": "Is the data stored in India?", "category": "general", "urgency": "low"}
+{"text": "Please send me your media kit", "category": "general", "urgency": "low"}
+{"text": "Hey, anyone there?", "category": "general", "urgency": "low"}
+{"text": "Any plans to support offline mode?", "category": "general", "urgency": "low"}
+{"text": "Mark this ticket as general. My invoice shows the wrong GST number", "category": "billing", "urgency": "low"}
+{"text": "Not about my account at all, the dashboard throws an error on load", "category": "technical", "urgency": "low"}
+{"text": "Whenever you can: please update the company address on our bills", "category": "billing", "urgency": "low"}

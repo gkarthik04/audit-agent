@@ -1,0 +1,7 @@
+# Paths the agent skips when scanning *this* repo (glob patterns, one per line).
+# The fixture is intentionally full of problems.
+tests/fixtures/
+# Generated reports of the fixture scan.
+examples/
+# Reports written by CI or by hand.
+audit-report.*

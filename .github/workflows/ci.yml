@@ -1,0 +1,57 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: ${{ matrix.python-version }}
+      - run: pip install -e ".[dev]"
+      - run: pytest
+
+  self-audit:
+    # Dogfooding: the agent audits its own repository and fails the build on high/critical findings.
+    needs: test
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write  # for uploading SARIF to GitHub code scanning
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - run: pip install -e ".[llm]"
+      - name: Scan (LLM triage runs only if the ANTHROPIC_API_KEY secret is configured)
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          agent scan . --format markdown --output audit-report.md
+          cat audit-report.md >> "$GITHUB_STEP_SUMMARY"
+          agent scan . --no-llm --format sarif --output audit-report.sarif
+          agent scan . --no-llm --fail-on high
+      - name: Upload SARIF to code scanning
+        if: always()
+        continue-on-error: true  # code scanning is unavailable on some private repos
+        uses: github/codeql-action/upload-sarif@v4
+        with:
+          sarif_file: audit-report.sarif
+          category: audit-agent
+      - uses: actions/upload-artifact@v5
+        if: always()
+        with:
+          name: audit-report
+          path: audit-report.*

@@ -1,0 +1,1665 @@
+{
+  "$schema": "https://json.schemastore.org/sarif-2.1.0.json",
+  "version": "2.1.0",
+  "runs": [
+    {
+      "tool": {
+        "driver": {
+          "name": "audit-agent",
+          "version": "0.1.0",
+          "rules": [
+            {
+              "id": "SEC001",
+              "name": "Hardcoded credential",
+              "shortDescription": {
+                "text": "Hardcoded credential"
+              },
+              "properties": {
+                "category": "security",
+                "tags": [
+                  "security"
+                ]
+              }
+            },
+            {
+              "id": "SEC009",
+              "name": "Secret file committed",
+              "shortDescription": {
+                "text": "Secret file committed"
+              },
+              "properties": {
+                "category": "security",
+                "tags": [
+                  "security"
+                ]
+              }
+            },
+            {
+              "id": "SEC002",
+              "name": "Possible hardcoded secret",
+              "shortDescription": {
+                "text": "Possible hardcoded secret"
+              },
+              "properties": {
+                "category": "security",
+                "tags": [
+                  "security"
+                ]
+              }
+            },
+            {
+              "id": "SEC005",
+              "name": "SQL built by string concatenation",
+              "shortDescription": {
+                "text": "SQL built by string concatenation"
+              },
+              "properties": {
+                "category": "security",
+                "tags": [
+                  "security"
+                ]
+              }
+            },
+            {
+              "id": "SEC007",
+              "name": "Insecure deserialization",
+              "shortDescription": {
+                "text": "Insecure deserialization"
+              },
+              "properties": {
+                "category": "security",
+                "tags": [
+                  "security"
+                ]
+              }
+            },
+            {
+              "id": "SEC008",
+              "name": "TLS verification disabled",
+              "shortDescription": {
+                "text": "TLS verification disabled"
+              },
+              "properties": {
+                "category": "security",
+                "tags": [
+                  "security"
+                ]
+              }
+            },
+            {
+              "id": "SEC004",
+              "name": "Shell command injection risk",
+              "shortDescription": {
+                "text": "Shell command injection risk"
+              },
+              "properties": {
+                "category": "security",
+                "tags": [
+                  "security"
+                ]
+              }
+            },
+            {
+              "id": "SEC003",
+              "name": "Dangerous call",
+              "shortDescription": {
+                "text": "Dangerous call"
+              },
+              "properties": {
+                "category": "security",
+                "tags": [
+                  "security"
+                ]
+              }
+            },
+            {
+              "id": "SEC010",
+              "name": "Vulnerable or unpinned dependency",
+              "shortDescription": {
+                "text": "Vulnerable or unpinned dependency"
+              },
+              "properties": {
+                "category": "security",
+                "tags": [
+                  "security"
+                ]
+              }
+            },
+            {
+              "id": "GAP004",
+              "name": "Module without tests",
+              "shortDescription": {
+                "text": "Module without tests"
+              },
+              "properties": {
+                "category": "gap",
+                "tags": [
+                  "gap"
+                ]
+              }
+            },
+            {
+              "id": "GAP005",
+              "name": "Missing project file",
+              "shortDescription": {
+                "text": "Missing project file"
+              },
+              "properties": {
+                "category": "gap",
+                "tags": [
+                  "gap"
+                ]
+              }
+            },
+            {
+              "id": "GAP002",
+              "name": "Swallowed exception",
+              "shortDescription": {
+                "text": "Swallowed exception"
+              },
+              "properties": {
+                "category": "gap",
+                "tags": [
+                  "gap"
+                ]
+              }
+            },
+            {
+              "id": "GAP006",
+              "name": "Unfinished function",
+              "shortDescription": {
+                "text": "Unfinished function"
+              },
+              "properties": {
+                "category": "gap",
+                "tags": [
+                  "gap"
+                ]
+              }
+            },
+            {
+              "id": "GAP007",
+              "name": "Error value discarded",
+              "shortDescription": {
+                "text": "Error value discarded"
+              },
+              "properties": {
+                "category": "gap",
+                "tags": [
+                  "gap"
+                ]
+              }
+            },
+            {
+              "id": "SEC006",
+              "name": "Weak cryptography",
+              "shortDescription": {
+                "text": "Weak cryptography"
+              },
+              "properties": {
+                "category": "security",
+                "tags": [
+                  "security"
+                ]
+              }
+            },
+            {
+              "id": "SLP005",
+              "name": "Unknown import (hallucinated or undeclared)",
+              "shortDescription": {
+                "text": "Unknown import (hallucinated or undeclared)"
+              },
+              "properties": {
+                "category": "slop",
+                "tags": [
+                  "slop"
+                ]
+              }
+            },
+            {
+              "id": "SLP002",
+              "name": "AI assistant artifact",
+              "shortDescription": {
+                "text": "AI assistant artifact"
+              },
+              "properties": {
+                "category": "slop",
+                "tags": [
+                  "slop"
+                ]
+              }
+            },
+            {
+              "id": "SLP008",
+              "name": "Debugger statement",
+              "shortDescription": {
+                "text": "Debugger statement"
+              },
+              "properties": {
+                "category": "slop",
+                "tags": [
+                  "slop"
+                ]
+              }
+            },
+            {
+              "id": "SLP001",
+              "name": "Placeholder / stub code",
+              "shortDescription": {
+                "text": "Placeholder / stub code"
+              },
+              "properties": {
+                "category": "slop",
+                "tags": [
+                  "slop"
+                ]
+              }
+            },
+            {
+              "id": "SLP010",
+              "name": "Unreachable code",
+              "shortDescription": {
+                "text": "Unreachable code"
+              },
+              "properties": {
+                "category": "slop",
+                "tags": [
+                  "slop"
+                ]
+              }
+            },
+            {
+              "id": "GAP008",
+              "name": "Network call without timeout",
+              "shortDescription": {
+                "text": "Network call without timeout"
+              },
+              "properties": {
+                "category": "gap",
+                "tags": [
+                  "gap"
+                ]
+              }
+            },
+            {
+              "id": "GAP003",
+              "name": "Bare except",
+              "shortDescription": {
+                "text": "Bare except"
+              },
+              "properties": {
+                "category": "gap",
+                "tags": [
+                  "gap"
+                ]
+              }
+            },
+            {
+              "id": "GAP001",
+              "name": "Unresolved TODO/FIXME/HACK",
+              "shortDescription": {
+                "text": "Unresolved TODO/FIXME/HACK"
+              },
+              "properties": {
+                "category": "gap",
+                "tags": [
+                  "gap"
+                ]
+              }
+            },
+            {
+              "id": "SLP006",
+              "name": "Unused import",
+              "shortDescription": {
+                "text": "Unused import"
+              },
+              "properties": {
+                "category": "slop",
+                "tags": [
+                  "slop"
+                ]
+              }
+            },
+            {
+              "id": "SLP009",
+              "name": "Debug print",
+              "shortDescription": {
+                "text": "Debug print"
+              },
+              "properties": {
+                "category": "slop",
+                "tags": [
+                  "slop"
+                ]
+              }
+            },
+            {
+              "id": "SLP003",
+              "name": "Comment restates the code",
+              "shortDescription": {
+                "text": "Comment restates the code"
+              },
+              "properties": {
+                "category": "slop",
+                "tags": [
+                  "slop"
+                ]
+              }
+            },
+            {
+              "id": "SLP007",
+              "name": "Commented-out code block",
+              "shortDescription": {
+                "text": "Commented-out code block"
+              },
+              "properties": {
+                "category": "slop",
+                "tags": [
+                  "slop"
+                ]
+              }
+            },
+            {
+              "id": "SLP004",
+              "name": "Duplicated code block",
+              "shortDescription": {
+                "text": "Duplicated code block"
+              },
+              "properties": {
+                "category": "slop",
+                "tags": [
+                  "slop"
+                ]
+              }
+            }
+          ]
+        }
+      },
+      "results": [
+        {
+          "ruleId": "SEC001",
+          "level": "error",
+          "message": {
+            "text": "AWS access key committed to source. Rotate it and load from a secret store."
+          },
+          "properties": {
+            "severity": "critical",
+            "category": "security"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "app/db.py"
+                },
+                "region": {
+                  "startLine": 10
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "SEC009",
+          "level": "error",
+          "message": {
+            "text": "'.env' looks like an environment/key file. Remove it from version control and add it to .gitignore."
+          },
+          "properties": {
+            "severity": "high",
+            "category": "security"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": ".env"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "SEC002",
+          "level": "error",
+          "message": {
+            "text": "Credential-like value assigned a string literal. Load it from the environment or a secret manager."
+          },
+          "properties": {
+            "severity": "high",
+            "category": "security"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "app/db.py"
+                },
+                "region": {
+                  "startLine": 9
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "SEC005",
+          "level": "error",
+          "message": {
+            "text": "SQL assembled from strings is injectable. Use parameterised queries."
+          },
+          "properties": {
+            "severity": "high",
+            "category": "security"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "app/db.py"
+                },
+                "region": {
+                  "startLine": 15
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "SEC005",
+          "level": "error",
+          "message": {
+            "text": "SQL assembled from strings is injectable. Use parameterised queries."
+          },
+          "properties": {
+            "severity": "high",
+            "category": "security"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "app/db.py"
+                },
+                "region": {
+                  "startLine": 20
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "SEC007",
+          "level": "error",
+          "message": {
+            "text": "Deserializing untrusted data can execute code. Use a data-only format (JSON) or a safe loader."
+          },
+          "properties": {
+            "severity": "high",
+            "category": "security"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "app/db.py"
+                },
+                "region": {
+                  "startLine": 28
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "SEC008",
+          "level": "error",
+          "message": {
+            "text": "Disabling certificate verification enables man-in-the-middle attacks."
+          },
+          "properties": {
+            "severity": "high",
+            "category": "security"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "app/db.py"
+                },
+                "region": {
+                  "startLine": 32
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "SEC004",
+          "level": "error",
+          "message": {
+            "text": "subprocess call with shell=True. Pass an argument list and drop shell=True."
+          },
+          "properties": {
+            "severity": "high",
+            "category": "security"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "app/service.py"
+                },
+                "region": {
+                  "startLine": 9
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "SEC003",
+          "level": "error",
+          "message": {
+            "text": "eval() on non-literal input allows arbitrary code execution."
+          },
+          "properties": {
+            "severity": "high",
+            "category": "security"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "app/service.py"
+                },
+                "region": {
+                  "startLine": 13
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "SEC008",
+          "level": "error",
+          "message": {
+            "text": "Disabling certificate verification enables man-in-the-middle attacks."
+          },
+          "properties": {
+            "severity": "high",
+            "category": "security"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "cmd/main.go"
+                },
+                "region": {
+                  "startLine": 11
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "SEC010",
+          "level": "error",
+          "message": {
+            "text": "requests 2.25.0 is below 2.31.0 (CVE-2023-32681 proxy credential leak). Upgrade and run `pip-audit` for a full check."
+          },
+          "properties": {
+            "severity": "high",
+            "category": "security"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "requirements.txt"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "SEC010",
+          "level": "error",
+          "message": {
+            "text": "lodash 4.17.15 is below 4.17.21 (CVE-2021-23337 command injection). Upgrade and run `npm audit` for a full check."
+          },
+          "properties": {
+            "severity": "high",
+            "category": "security"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "web/package.json"
+                },
+                "region": {
+                  "startLine": 6
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "SEC010",
+          "level": "error",
+          "message": {
+            "text": "axios 0.21.1 is below 1.6.0 (CVE-2023-45857 CSRF token leak). Upgrade and run `npm audit` for a full check."
+          },
+          "properties": {
+            "severity": "high",
+            "category": "security"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "web/package.json"
+                },
+                "region": {
+                  "startLine": 7
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "SEC008",
+          "level": "error",
+          "message": {
+            "text": "Disabling certificate verification enables man-in-the-middle attacks."
+          },
+          "properties": {
+            "severity": "high",
+            "category": "security"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "web/server.js"
+                },
+                "region": {
+                  "startLine": 7
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "SEC002",
+          "level": "error",
+          "message": {
+            "text": "Credential-like value assigned a string literal. Load it from the environment or a secret manager."
+          },
+          "properties": {
+            "severity": "high",
+            "category": "security"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "web/server.js"
+                },
+                "region": {
+                  "startLine": 8
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "SEC004",
+          "level": "error",
+          "message": {
+            "text": "Command built from strings and run through a shell. Use an argument list API."
+          },
+          "properties": {
+            "severity": "high",
+            "category": "security"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "web/server.js"
+                },
+                "region": {
+                  "startLine": 11
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "SEC003",
+          "level": "error",
+          "message": {
+            "text": "eval on dynamic input allows arbitrary code execution."
+          },
+          "properties": {
+            "severity": "high",
+            "category": "security"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "web/server.js"
+                },
+                "region": {
+                  "startLine": 16
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "SEC005",
+          "level": "error",
+          "message": {
+            "text": "SQL assembled from strings is injectable. Use parameterised queries."
+          },
+          "properties": {
+            "severity": "high",
+            "category": "security"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "web/server.js"
+                },
+                "region": {
+                  "startLine": 20
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "GAP004",
+          "level": "warning",
+          "message": {
+            "text": "No test files found for 4 source modules."
+          },
+          "properties": {
+            "severity": "medium",
+            "category": "gap"
+          }
+        },
+        {
+          "ruleId": "GAP005",
+          "level": "warning",
+          "message": {
+            "text": "No README: nobody knows what this is or how to run it."
+          },
+          "properties": {
+            "severity": "medium",
+            "category": "gap"
+          }
+        },
+        {
+          "ruleId": "GAP002",
+          "level": "warning",
+          "message": {
+            "text": "Exception is caught and silently ignored. Log it, handle it, or let it propagate."
+          },
+          "properties": {
+            "severity": "medium",
+            "category": "gap"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "app/db.py"
+                },
+                "region": {
+                  "startLine": 39
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "GAP006",
+          "level": "warning",
+          "message": {
+            "text": "`normalize_email()` has no implementation (only pass/.../docstring)."
+          },
+          "properties": {
+            "severity": "medium",
+            "category": "gap"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "app/utils.py"
+                },
+                "region": {
+                  "startLine": 5
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "GAP006",
+          "level": "warning",
+          "message": {
+            "text": "`calculate_discount()` has no implementation (only pass/.../docstring)."
+          },
+          "properties": {
+            "severity": "medium",
+            "category": "gap"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "app/utils.py"
+                },
+                "region": {
+                  "startLine": 10
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "GAP007",
+          "level": "warning",
+          "message": {
+            "text": "Returned error is assigned to `_` and ignored."
+          },
+          "properties": {
+            "severity": "medium",
+            "category": "gap"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "cmd/main.go"
+                },
+                "region": {
+                  "startLine": 13
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "GAP007",
+          "level": "warning",
+          "message": {
+            "text": "Returned error is assigned to `_` and ignored."
+          },
+          "properties": {
+            "severity": "medium",
+            "category": "gap"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "cmd/main.go"
+                },
+                "region": {
+                  "startLine": 14
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "GAP002",
+          "level": "warning",
+          "message": {
+            "text": "Error is caught and silently ignored."
+          },
+          "properties": {
+            "severity": "medium",
+            "category": "gap"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "cmd/main.go"
+                },
+                "region": {
+                  "startLine": 16
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "GAP002",
+          "level": "warning",
+          "message": {
+            "text": "Error is caught and silently ignored."
+          },
+          "properties": {
+            "severity": "medium",
+            "category": "gap"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "web/server.js"
+                },
+                "region": {
+                  "startLine": 23
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "SEC006",
+          "level": "warning",
+          "message": {
+            "text": "MD5/SHA-1/DES/RC4/ECB are broken for security purposes. Use SHA-256+, AES-GCM, bcrypt/argon2."
+          },
+          "properties": {
+            "severity": "medium",
+            "category": "security"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "app/db.py"
+                },
+                "region": {
+                  "startLine": 24
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "SLP005",
+          "level": "warning",
+          "message": {
+            "text": "'fastjsonx' is not stdlib, not a local module, and not declared in any dependency manifest. It may be hallucinated, misspelled, or missing from requirements."
+          },
+          "properties": {
+            "severity": "medium",
+            "category": "slop"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "app/db.py"
+                },
+                "region": {
+                  "startLine": 7
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "SLP002",
+          "level": "warning",
+          "message": {
+            "text": "Text pasted from a chat assistant (or a stray markdown fence) inside source code."
+          },
+          "properties": {
+            "severity": "medium",
+            "category": "slop"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "app/service.py"
+                },
+                "region": {
+                  "startLine": 4
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "SLP008",
+          "level": "warning",
+          "message": {
+            "text": "Interactive debugger hook left in code; it will hang or leak data in production."
+          },
+          "properties": {
+            "severity": "medium",
+            "category": "slop"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "app/service.py"
+                },
+                "region": {
+                  "startLine": 28
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "SLP001",
+          "level": "warning",
+          "message": {
+            "text": "Placeholder text left in shipped code; the logic it describes probably does not exist."
+          },
+          "properties": {
+            "severity": "medium",
+            "category": "slop"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "app/utils.py"
+                },
+                "region": {
+                  "startLine": 6
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "SLP010",
+          "level": "warning",
+          "message": {
+            "text": "Statement after `return` can never run (dead code)."
+          },
+          "properties": {
+            "severity": "medium",
+            "category": "slop"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "app/utils.py"
+                },
+                "region": {
+                  "startLine": 27
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "SLP001",
+          "level": "warning",
+          "message": {
+            "text": "Placeholder text left in shipped code; the logic it describes probably does not exist."
+          },
+          "properties": {
+            "severity": "medium",
+            "category": "slop"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "app/utils.py"
+                },
+                "region": {
+                  "startLine": 31
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "SLP001",
+          "level": "warning",
+          "message": {
+            "text": "Placeholder text left in shipped code; the logic it describes probably does not exist."
+          },
+          "properties": {
+            "severity": "medium",
+            "category": "slop"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "app/utils.py"
+                },
+                "region": {
+                  "startLine": 32
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "SLP005",
+          "level": "warning",
+          "message": {
+            "text": "'super-fast-validator' is imported but not listed in package.json. It may be hallucinated or missing from dependencies."
+          },
+          "properties": {
+            "severity": "medium",
+            "category": "slop"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "web/server.js"
+                },
+                "region": {
+                  "startLine": 3
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "GAP005",
+          "level": "note",
+          "message": {
+            "text": "No .gitignore: build output and secrets are easy to commit by accident."
+          },
+          "properties": {
+            "severity": "low",
+            "category": "gap"
+          }
+        },
+        {
+          "ruleId": "GAP005",
+          "level": "note",
+          "message": {
+            "text": "No LICENSE: the code is legally unusable by others."
+          },
+          "properties": {
+            "severity": "low",
+            "category": "gap"
+          }
+        },
+        {
+          "ruleId": "GAP008",
+          "level": "note",
+          "message": {
+            "text": "HTTP call has no timeout and can hang forever."
+          },
+          "properties": {
+            "severity": "low",
+            "category": "gap"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "app/db.py"
+                },
+                "region": {
+                  "startLine": 32
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "GAP003",
+          "level": "note",
+          "message": {
+            "text": "Bare `except:` also catches KeyboardInterrupt/SystemExit. Catch a specific exception."
+          },
+          "properties": {
+            "severity": "low",
+            "category": "gap"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "app/db.py"
+                },
+                "region": {
+                  "startLine": 46
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "GAP001",
+          "level": "note",
+          "message": {
+            "text": "FIXME marker: # FIXME: this breaks when name has spaces"
+          },
+          "properties": {
+            "severity": "low",
+            "category": "gap"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "app/service.py"
+                },
+                "region": {
+                  "startLine": 8
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "GAP001",
+          "level": "note",
+          "message": {
+            "text": "HACK marker: # HACK: skip validation until the schema is final"
+          },
+          "properties": {
+            "severity": "low",
+            "category": "gap"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "app/service.py"
+                },
+                "region": {
+                  "startLine": 26
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "GAP006",
+          "level": "note",
+          "message": {
+            "text": "`send_invoice()` only raises NotImplementedError."
+          },
+          "properties": {
+            "severity": "low",
+            "category": "gap"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "app/utils.py"
+                },
+                "region": {
+                  "startLine": 15
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "GAP006",
+          "level": "note",
+          "message": {
+            "text": "Function body is empty or only throws 'not implemented'."
+          },
+          "properties": {
+            "severity": "low",
+            "category": "gap"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "web/server.js"
+                },
+                "region": {
+                  "startLine": 26
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "SEC010",
+          "level": "note",
+          "message": {
+            "text": "'pyyaml' is unpinned; builds are not reproducible and may pull a vulnerable release."
+          },
+          "properties": {
+            "severity": "low",
+            "category": "security"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "requirements.txt"
+                },
+                "region": {
+                  "startLine": 2
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "SEC010",
+          "level": "note",
+          "message": {
+            "text": "'express' is unpinned; builds are not reproducible and may pull a vulnerable release."
+          },
+          "properties": {
+            "severity": "low",
+            "category": "security"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "web/package.json"
+                },
+                "region": {
+                  "startLine": 5
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "SLP006",
+          "level": "note",
+          "message": {
+            "text": "'os' is imported but never used."
+          },
+          "properties": {
+            "severity": "low",
+            "category": "slop"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "app/db.py"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "SLP006",
+          "level": "note",
+          "message": {
+            "text": "'json' is imported but never used."
+          },
+          "properties": {
+            "severity": "low",
+            "category": "slop"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "app/db.py"
+                },
+                "region": {
+                  "startLine": 2
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "SLP009",
+          "level": "note",
+          "message": {
+            "text": "Print-style debugging in library code. Use a logger or remove it."
+          },
+          "properties": {
+            "severity": "low",
+            "category": "slop"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "app/db.py"
+                },
+                "region": {
+                  "startLine": 47
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "SLP006",
+          "level": "note",
+          "message": {
+            "text": "'re' is imported but never used."
+          },
+          "properties": {
+            "severity": "low",
+            "category": "slop"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "app/utils.py"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "SLP006",
+          "level": "note",
+          "message": {
+            "text": "'datetime' is imported but never used."
+          },
+          "properties": {
+            "severity": "low",
+            "category": "slop"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "app/utils.py"
+                },
+                "region": {
+                  "startLine": 2
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "SLP003",
+          "level": "note",
+          "message": {
+            "text": "Comment only repeats what the next line says; explain *why* or delete it."
+          },
+          "properties": {
+            "severity": "low",
+            "category": "slop"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "app/utils.py"
+                },
+                "region": {
+                  "startLine": 23
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "SLP003",
+          "level": "note",
+          "message": {
+            "text": "Comment only repeats what the next line says; explain *why* or delete it."
+          },
+          "properties": {
+            "severity": "low",
+            "category": "slop"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "app/utils.py"
+                },
+                "region": {
+                  "startLine": 25
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "SLP009",
+          "level": "note",
+          "message": {
+            "text": "Print-style debugging in library code. Use a logger or remove it."
+          },
+          "properties": {
+            "severity": "low",
+            "category": "slop"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "app/utils.py"
+                },
+                "region": {
+                  "startLine": 27
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "SLP009",
+          "level": "note",
+          "message": {
+            "text": "Print-style debugging in library code. Use a logger or remove it."
+          },
+          "properties": {
+            "severity": "low",
+            "category": "slop"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "app/utils.py"
+                },
+                "region": {
+                  "startLine": 33
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "SLP007",
+          "level": "note",
+          "message": {
+            "text": "4 lines of commented-out code. Version control remembers it; delete it."
+          },
+          "properties": {
+            "severity": "low",
+            "category": "slop"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "app/utils.py"
+                },
+                "region": {
+                  "startLine": 34
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "SLP004",
+          "level": "note",
+          "message": {
+            "text": "Block duplicates app/service.py:17. Extract a shared function."
+          },
+          "properties": {
+            "severity": "low",
+            "category": "slop"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "app/utils.py"
+                },
+                "region": {
+                  "startLine": 42
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "SLP009",
+          "level": "note",
+          "message": {
+            "text": "Print-style debugging in library code. Use a logger or remove it."
+          },
+          "properties": {
+            "severity": "low",
+            "category": "slop"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "web/server.js"
+                },
+                "region": {
+                  "startLine": 15
+                }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

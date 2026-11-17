@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "audit-agent"
+version = "0.1.0"
+description = "Architecture-agnostic code-audit agent: security issues, AI slop, and loose ends."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+dependencies = []  # the core scanner is pure standard library
+
+[project.optional-dependencies]
+llm = ["anthropic>=0.70"]
+dev = ["pytest>=8"]
+
+[project.scripts]
+agent = "audit_agent.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]  # tests run straight from a checkout, no install needed
