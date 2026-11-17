@@ -20,6 +20,7 @@ from __future__ import annotations
 
 import re
 import unicodedata
+from dataclasses import dataclass, field
 from difflib import SequenceMatcher
 from typing import TypedDict
 
@@ -146,15 +147,37 @@ def _negated(text: str, start: int) -> bool:
     return bool(_NEGATION_BEFORE.search(text[max(0, start - 40):start]))
 
 
-def scores(text: str) -> dict[str, float]:
-    t = defang(normalize(text))
-    out = {cat: 0.0 for cat in CATEGORIES}
+@dataclass
+class Analysis:
+    """Everything the classifier saw. `classify` uses the decision; the UI shows the evidence."""
+
+    scores: dict[str, float]
+    signals: dict[str, list[str]] = field(default_factory=dict)  # category -> matched phrases
+    negated: list[str] = field(default_factory=list)  # phrases ignored because of a negation
+    ignored_instructions: list[str] = field(default_factory=list)  # steering text removed by defang
+    urgency_cues: list[str] = field(default_factory=list)
+    de_escalated: bool = False
+    fallback: str | None = None  # "malfunction" or "no_signal" when no category matched
+
+
+def analyze(text: str) -> Analysis:
+    norm = normalize(text[:MAX_TEXT_CHARS])
+    t = defang(norm)
+    result = Analysis(scores={cat: 0.0 for cat in CATEGORIES},
+                      ignored_instructions=[m.group().strip() for m in _DEFANG.finditer(norm)])
     matched_spans: list[tuple[int, int]] = []
     for cat, rules in _COMPILED.items():
         for rx, weight in rules:
-            hit = next((m for m in rx.finditer(t) if not _negated(t, m.start())), None)
+            hit = None
+            for m in rx.finditer(t):
+                if _negated(t, m.start()):
+                    result.negated.append(m.group())
+                else:
+                    hit = m
+                    break
             if hit:
-                out[cat] += weight
+                result.scores[cat] += weight
+                result.signals.setdefault(cat, []).append(hit.group())
                 matched_spans.append(hit.span())
     # Typo tolerance: a misspelled word ("pasword") adds evidence once per category, and only
     # if that category had no exact signal at all. Each distinct word is checked once, and the
@@ -168,9 +191,19 @@ def scores(text: str) -> dict[str, float]:
         if any(s <= m.start() < e for s, e in matched_spans) or _negated(t, m.start()):
             continue
         cat = _fuzzy_category(word)
-        if cat and out[cat] == 0:
-            out[cat] = _FUZZY_WEIGHT
-    return out
+        if cat and result.scores[cat] == 0:
+            result.scores[cat] = _FUZZY_WEIGHT
+            result.signals.setdefault(cat, []).append(f"{word} (typo)")
+    result.de_escalated = bool(_NOT_URGENT.search(t))
+    result.urgency_cues = [m.group() for m in _URGENT.finditer(t)][:5]
+    if not any(result.scores.values()):
+        result.fallback = "malfunction" if _MALFUNCTION.search(t) else "no_signal"
+    result.negated = list(dict.fromkeys(result.negated))
+    return result
+
+
+def scores(text: str) -> dict[str, float]:
+    return analyze(text).scores
 
 
 def _fuzzy_category(word: str) -> str | None:
@@ -182,25 +215,38 @@ def _fuzzy_category(word: str) -> str | None:
 
 
 def urgency(text: str) -> str:
-    t = defang(normalize(text))
-    if _NOT_URGENT.search(t):
-        return "low"
-    return "high" if _URGENT.search(t) else "low"
+    a = analyze(text)
+    return "low" if a.de_escalated or not a.urgency_cues else "high"
+
+
+def decide(a: Analysis) -> Triage:
+    """Turn an Analysis into the public contract: category, urgency, confidence."""
+    level = "low" if a.de_escalated or not a.urgency_cues else "high"
+    if a.fallback:
+        # No topical signal. A ticket describing something going wrong is most likely a product
+        # fault; anything else (greetings, questions, feedback) is general.
+        category, confidence = ("technical", 0.45) if a.fallback == "malfunction" else ("general", 0.4)
+        return {"category": category, "urgency": level, "confidence": confidence}
+    ranked = sorted(a.scores.items(), key=lambda kv: (-kv[1], CATEGORIES.index(kv[0])))
+    (best, top), (_, second) = ranked[0], ranked[1]
+    margin = (top - second) / top  # 1.0 = unambiguous, 0.0 = tie
+    confidence = min(0.95, 0.45 + 0.07 * top + 0.25 * margin)
+    return {"category": best, "urgency": level, "confidence": round(confidence, 2)}
 
 
 def classify(text: str) -> Triage:
     if not isinstance(text, str) or not text.strip():
         raise ValueError("text must be a non-empty string")
-    text = text[:MAX_TEXT_CHARS]
-    s = scores(text)
-    ranked = sorted(s.items(), key=lambda kv: (-kv[1], CATEGORIES.index(kv[0])))
-    (best, top), (_, second) = ranked[0], ranked[1]
-    if top == 0:
-        # No topical signal. A ticket describing something going wrong is most likely a product
-        # fault; anything else (greetings, questions, feedback) is general.
-        if _MALFUNCTION.search(defang(normalize(text))):
-            return {"category": "technical", "urgency": urgency(text), "confidence": 0.45}
-        return {"category": "general", "urgency": urgency(text), "confidence": 0.4}
-    margin = (top - second) / top  # 1.0 = unambiguous, 0.0 = tie
-    confidence = min(0.95, 0.45 + 0.07 * top + 0.25 * margin)
-    return {"category": best, "urgency": urgency(text), "confidence": round(confidence, 2)}
+    return decide(analyze(text))
+
+
+def explain(text: str) -> dict[str, object]:
+    """The classification plus the evidence behind it (used by POST /classify?explain=1)."""
+    if not isinstance(text, str) or not text.strip():
+        raise ValueError("text must be a non-empty string")
+    a = analyze(text)
+    return {**decide(a), "explanation": {
+        "scores": a.scores, "signals": a.signals, "negated": a.negated,
+        "ignored_instructions": a.ignored_instructions, "urgency_cues": a.urgency_cues,
+        "de_escalated": a.de_escalated, "fallback": a.fallback,
+    }}

@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Classify support tickets by category and urgency, with an explanation for every decision.">
+  <title>Ticket Triage</title>
+  <link rel="stylesheet" href="/static/app.css">
+  <script src="/static/app.js" defer></script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="logo" aria-hidden="true"></span>
+      <div>
+        <h1>Ticket Triage</h1>
+        <p class="tagline">Category, urgency and the reason why, for every support ticket.</p>
+      </div>
+    </div>
+    <div id="status" class="status" role="status" aria-live="polite">
+      <span class="dot"></span><span id="status-text">Checking API…</span>
+    </div>
+  </header>
+
+  <nav class="tabs" role="tablist" aria-label="Mode">
+    <button role="tab" id="tab-single" aria-controls="view-single" aria-selected="true">Single ticket</button>
+    <button role="tab" id="tab-queue" aria-controls="view-queue" aria-selected="false" tabindex="-1">Queue</button>
+  </nav>
+
+  <main>
+    <!-- Single ticket -->
+    <section id="view-single" role="tabpanel" aria-labelledby="tab-single" class="grid">
+      <div class="area-input">
+        <div class="card">
+          <label for="ticket" class="label">Ticket text</label>
+          <textarea id="ticket" rows="7" maxlength="16000"
+                    placeholder="Paste a customer message, e.g. &quot;I was charged twice for my subscription, please refund ASAP&quot;"></textarea>
+          <div class="row between">
+            <div class="row">
+              <button id="classify" class="btn primary" type="button">Classify</button>
+              <button id="clear" class="btn ghost" type="button">Clear</button>
+            </div>
+            <span id="counter" class="muted small">0 / 16,384 bytes</span>
+          </div>
+          <p class="muted small hint">Press <kbd>Ctrl</kbd> + <kbd>Enter</kbd> to classify.</p>
+        </div>
+      </div>
+
+      <div class="area-result">
+        <div id="result" class="card result" aria-live="polite">
+          <div class="empty-state">
+            <span class="big-dot" aria-hidden="true"></span>
+            <p><strong>No ticket classified yet.</strong></p>
+            <p class="muted">The result shows the category, urgency, confidence, and the evidence behind them.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="area-extras col">
+        <div class="card">
+          <h2 class="h2">Try an example</h2>
+          <div id="examples" class="chips"></div>
+        </div>
+
+        <div class="card">
+          <div class="row between">
+            <h2 class="h2">Recent</h2>
+            <span class="muted small">kept in this tab only</span>
+          </div>
+          <ol id="recent" class="recent"><li class="muted small empty">Nothing yet.</li></ol>
+        </div>
+      </div>
+    </section>
+
+    <!-- Queue -->
+    <section id="view-queue" role="tabpanel" aria-labelledby="tab-queue" hidden>
+      <div class="card">
+        <label for="queue-input" class="label">Tickets, one per line (up to 50)</label>
+        <textarea id="queue-input" rows="8" placeholder="Paste a batch of tickets, one per line"></textarea>
+        <div class="row between">
+          <div class="row">
+            <button id="queue-run" class="btn primary" type="button">Triage queue</button>
+            <button id="queue-sample" class="btn ghost" type="button">Load sample queue</button>
+          </div>
+          <span id="queue-progress" class="muted small" aria-live="polite"></span>
+        </div>
+      </div>
+
+      <div id="queue-summary" class="stats" hidden></div>
+
+      <div id="queue-table-card" class="card" hidden>
+        <div class="row between">
+          <h2 class="h2">Prioritised queue</h2>
+          <div class="row">
+            <label for="queue-filter" class="muted small">Show</label>
+            <select id="queue-filter">
+              <option value="all">All categories</option>
+              <option value="billing">Billing</option>
+              <option value="technical">Technical</option>
+              <option value="account">Account</option>
+              <option value="general">General</option>
+            </select>
+            <button id="queue-export" class="btn ghost" type="button">Export CSV</button>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>#</th><th>Ticket</th><th>Category</th><th>Urgency</th><th class="num">Confidence</th></tr></thead>
+            <tbody id="queue-rows"></tbody>
+          </table>
+        </div>
+        <p class="muted small">Sorted by urgency, then confidence. High-urgency tickets come first.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer muted small">
+    <span>API:</span> <code>POST /classify {"text": "…"}</code> · <code>GET /health</code> ·
+    deterministic rules, no data stored, ticket text never logged.
+  </footer>
+</body>
+</html>

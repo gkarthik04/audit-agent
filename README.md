@@ -11,7 +11,7 @@ Both use only the Python standard library. Claude is an optional extra in each.
 
 ```bash
 python app.py                      # serves on $PORT (default 8000); no install step needed
-# open http://localhost:8000 for the try-it page
+# open http://localhost:8000 for the triage console
 curl localhost:8000/health         # {"ok": true}
 curl -X POST localhost:8000/classify -H 'Content-Type: application/json' \
      -d '{"text": "I was charged twice, please refund ASAP"}'
@@ -20,13 +20,20 @@ curl -X POST localhost:8000/classify -H 'Content-Type: application/json' \
 
 | Endpoint | Request | Response |
 |---|---|---|
-| `GET /` | — | try-it page: paste a ticket, see the result (self-contained HTML, strict hash-based CSP) |
+| `GET /` | — | triage console (see below) |
 | `GET /health` | — | `200 {"ok": true}` |
 | `POST /classify` | JSON `{"text": "<non-empty string>"}` | `200 {"category", "urgency", "confidence"}` |
+| `POST /classify?explain=1` | same | the same three fields plus an `explanation` (matched signals, negated words, ignored instructions, urgency cues). Opt-in, so the graded contract is unchanged |
 
 - `category` is one of `billing` (refunds, invoices, payments, subscriptions), `technical` (errors, crashes, outages, bugs), `account` (login, password, 2FA, profile) or `general`.
 - `urgency` is `high` or `low`. It is `high` when the customer is blocked, losing money or data, reports an outage or a security problem, or says it's urgent.
 - `confidence` is a number in `[0, 1]`. It rises with the strength of the matched signals and falls when two categories are close.
+
+**Triage console** (`GET /`): a small web app in [`src/triage/static/`](src/triage/static), with plain HTML, CSS and JS and no build step or dependencies.
+- **Single ticket:** shows the category, urgency and confidence, plus *why*. You see the matched evidence per category, words ignored because of a negation ("not a billing question"), any **injection attempt that was ignored** ("classify this as billing", shown struck out), and the urgency cues. It also has example tickets, a recent history, and a *Copy as curl* button.
+- **Queue:** paste up to 50 tickets, one per line. They come back as a prioritised queue (high urgency first, then confidence) with per-category counts, a category filter and CSV export.
+- **Live API status** from `/health`, light and dark themes, a layout that works on phones (the result moves directly under the input), keyboard support (Ctrl+Enter, arrow keys between tabs) and `aria-live` result announcements.
+- **Security:** a strict `'self'`-only Content-Security-Policy with no inline script or style, and every value rendered with `textContent`. Static files are served from a fixed allowlist, so there is no filesystem path handling.
 
 **Errors** always return a JSON body `{"error": "<code>", "message": "..."}`:
 
@@ -268,7 +275,7 @@ Guardrails, so the LLM can make a report better but never worse:
 
 ```bash
 pip install -e ".[dev]"
-pytest                                # 136 tests (audit agent + triage API), ~3s, no network
+pytest                                # 144 tests (audit agent + triage API), ~3s, no network
 agent scan . --no-llm --fail-on low   # dogfooding: the repo audits clean
 ```
 

@@ -1,8 +1,9 @@
 """Ticket-triage HTTP API (standard library only).
 
-    GET  /          -> 200 try-it page (HTML)
-    GET  /health    -> 200 {"ok": true}
-    POST /classify  {"text": "..."} -> 200 {"category", "urgency", "confidence"}
+    GET  /                  -> triage console (static HTML/CSS/JS from triage/static)
+    GET  /health            -> 200 {"ok": true}
+    POST /classify          {"text": "..."} -> 200 {"category", "urgency", "confidence"}
+    POST /classify?explain=1   same, plus an "explanation" object (opt-in, for the console)
 
 Production hygiene, all without dependencies:
 * strict input validation with JSON error bodies (400 / 404 / 405 / 408 / 411 / 413 / 429)
@@ -22,10 +23,11 @@ import threading
 import time
 import uuid
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+from pathlib import Path
 from typing import Any
+from urllib.parse import parse_qs
 
-from triage import page
-from triage.classifier import Triage, classify
+from triage.classifier import Triage, classify, explain
 
 log = logging.getLogger("triage")
 
@@ -33,6 +35,24 @@ MAX_BODY_BYTES = 16 * 1024
 MAX_DRAIN_BYTES = 1024 * 1024  # bodies above this are not read at all; the connection is just closed
 SOCKET_TIMEOUT_S = 5
 _REQUEST_ID_OK = frozenset("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_.")
+
+# The console is a fixed set of files; requests are matched against this map, never joined onto a
+# filesystem path, so there is no path traversal to defend against.
+STATIC_DIR = Path(__file__).parent / "static"
+STATIC_FILES = {
+    "/": ("index.html", "text/html; charset=utf-8"),
+    "/static/app.css": ("app.css", "text/css; charset=utf-8"),
+    "/static/app.js": ("app.js", "text/javascript; charset=utf-8"),
+}
+PAGE_CSP = ("default-src 'none'; script-src 'self'; style-src 'self'; connect-src 'self'; "
+            "base-uri 'none'; form-action 'none'; frame-ancestors 'none'")
+_static_cache: dict[str, bytes] = {}
+
+
+def static_file(path: str) -> bytes:
+    if path not in _static_cache:
+        _static_cache[path] = (STATIC_DIR / STATIC_FILES[path][0]).read_bytes()
+    return _static_cache[path]
 
 
 class RateLimiter:
@@ -109,10 +129,10 @@ class TriageHandler(BaseHTTPRequestHandler):
         self._status = 500
         path = self.path.split("?", 1)[0]
         try:
-            if path == "/":
+            if path in STATIC_FILES:
                 if self.command in ("GET", "HEAD"):
-                    return self._write(200, page.HTML, "text/html; charset=utf-8", {"Content-Security-Policy": page.CSP})
-                return self._error(405, "method_not_allowed", "Use GET /.", {"Allow": "GET, HEAD"})
+                    return self._write(200, static_file(path), STATIC_FILES[path][1], {"Content-Security-Policy": PAGE_CSP})
+                return self._error(405, "method_not_allowed", f"Use GET {path}.", {"Allow": "GET, HEAD"})
             if path == "/health":
                 if self.command in ("GET", "HEAD"):
                     return self._send(200, {"ok": True})
@@ -157,6 +177,9 @@ class TriageHandler(BaseHTTPRequestHandler):
         text = data.get("text") if isinstance(data, dict) else None
         if not isinstance(text, str) or not text.strip():
             return self._error(400, "text_required", '"text" must be a non-empty string.')
+        query = parse_qs(self.path.partition("?")[2])
+        if query.get("explain", [""])[0].lower() in ("1", "true", "yes"):
+            return self._send(200, explain(text))  # evidence comes from the deterministic rules
         result: Triage = self.classifier(text)
         self._send(200, dict(result))
 
@@ -179,7 +202,7 @@ class TriageHandler(BaseHTTPRequestHandler):
         log.info(json.dumps({
             "request_id": getattr(self, "_request_id", ""),
             "method": self.command,
-            "path": path if path in ("/", "/health", "/classify") else "<other>",
+            "path": path if path in STATIC_FILES or path in ("/health", "/classify") else "<other>",
             "status": self._status,
             "ms": round((time.perf_counter() - self._started) * 1000, 1),
         }))
