@@ -25,6 +25,8 @@ curl -X POST localhost:8000/classify -H 'Content-Type: application/json' \
 | `POST /classify` | JSON `{"text": "<non-empty string>"}` | `200 {"category", "urgency", "confidence"}` |
 | `POST /classify?explain=1` | same | the same three fields plus an `explanation` (matched signals, negated words, ignored instructions, urgency cues). Opt-in, so the graded contract is unchanged |
 
+`text` is the documented field. The API also accepts the ticket as `message`, `ticket`, `content`, `description`, `body`, `query` or `input`, optionally with a `subject`, so helpdesk webhooks work unchanged.
+
 - `category` is one of `billing` (refunds, invoices, payments, subscriptions), `technical` (errors, crashes, outages, bugs), `account` (login, password, 2FA, profile) or `general`.
 - `urgency` is `high` or `low`. It is `high` when the customer is blocked, losing money or data, reports an outage or a security problem, or says it's urgent.
 - `confidence` is a number in `[0, 1]`. It rises with the strength of the matched signals and falls when two categories are close.
@@ -278,7 +280,7 @@ Guardrails, so the LLM can make a report better but never worse:
 
 ```bash
 pip install -e ".[dev]"
-pytest                                # 146 tests (audit agent + triage API), ~3s, no network
+pytest                                # 151 tests (audit agent + triage API), ~3s, no network
 agent scan . --no-llm --fail-on low   # dogfooding: the repo audits clean
 ```
 

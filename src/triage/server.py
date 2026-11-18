@@ -51,6 +51,24 @@ PAGE_CSP = ("default-src 'none'; script-src 'self'; style-src 'self'; connect-sr
 _static_cache: dict[str, bytes] = {}
 
 
+_TEXT_ALIASES = ("ticket", "message", "content", "description", "body", "query", "input")
+
+
+def ticket_text(data: object) -> object:
+    """The ticket text from a request body. ``text`` is the documented field; helpdesks often send
+    ``message``/``ticket`` or ``subject`` + ``body`` instead, so those are accepted as well."""
+    if not isinstance(data, dict):
+        return None
+    if "text" in data:
+        return data["text"]
+    subject = data.get("subject") if isinstance(data.get("subject"), str) else ""
+    for key in _TEXT_ALIASES:
+        value = data.get(key)
+        if isinstance(value, str) and value.strip():
+            return f"{subject}\n{value}".strip() if subject.strip() else value
+    return subject or None
+
+
 def static_file(path: str) -> bytes:
     if path not in _static_cache:
         _static_cache[path] = (STATIC_DIR / STATIC_FILES[path][0]).read_bytes()
@@ -130,6 +148,8 @@ class TriageHandler(BaseHTTPRequestHandler):
         self._request_id = incoming if 0 < len(incoming) <= 64 and set(incoming) <= _REQUEST_ID_OK else uuid.uuid4().hex
         self._status = 500
         path = self.path.split("?", 1)[0]
+        if len(path) > 1:
+            path = path.rstrip("/") or "/"  # /classify/ and /health/ behave like /classify and /health
         try:
             if path in STATIC_FILES:
                 if self.command in ("GET", "HEAD"):
@@ -176,7 +196,7 @@ class TriageHandler(BaseHTTPRequestHandler):
         except TimeoutError:
             self.close_connection = True
             return self._error(408, "request_timeout", "Request body was not received in time.")
-        text = data.get("text") if isinstance(data, dict) else None
+        text = ticket_text(data)
         if not isinstance(text, str) or not text.strip():
             return self._error(400, "text_required", '"text" must be a non-empty string.')
         query = parse_qs(self.path.partition("?")[2])

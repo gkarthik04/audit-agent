@@ -71,6 +71,26 @@ def test_bad_input_is_400(port, raw, code):
     assert status == 400 and body["error"] == code
 
 
+@pytest.mark.parametrize("payload", [
+    {"message": "I was charged twice, refund please"},
+    {"ticket": "I was charged twice, refund please"},
+    {"subject": "Refund", "body": "I was charged twice"},
+])
+def test_common_field_names_are_accepted(port, payload):
+    status, _, body = call(port, "POST", "/classify", payload)
+    assert status == 200 and body["category"] == "billing"
+
+
+def test_text_field_wins_and_empty_text_is_still_rejected(port):
+    assert call(port, "POST", "/classify", {"text": "", "message": "refund"})[2]["error"] == "text_required"
+    assert call(port, "POST", "/classify", {"message": 5})[0] == 400
+
+
+def test_trailing_slash_is_accepted(port):
+    assert call(port, "POST", "/classify/", {"text": "app crashes"})[0] == 200
+    assert call(port, "GET", "/health/")[2] == {"ok": True}
+
+
 def test_long_text_within_body_limit_is_accepted(port):
     status, _, body = call(port, "POST", "/classify", {"text": "refund please " * 1000})  # ~14 KB
     assert status == 200 and body["category"] == "billing"
